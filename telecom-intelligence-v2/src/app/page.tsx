@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   LayoutDashboard, BarChart3, Brain, Package, Wifi,
-  Heart, Bell, Search, Menu, X, ChevronLeft,
-  Settings, LogOut, User, Database, ScanBarcode, Globe, Mail
+  Heart, Bell, Search, Menu, X,
+  Settings, LogOut, User, Database, ScanBarcode, Globe, Mail, ChevronRight
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -44,20 +44,19 @@ function AppContent() {
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [networkUptime, setNetworkUptime] = useState(0)
 
-  const navItems: { key: SectionKey; label: string; icon: React.ElementType; badge?: string }[] = [
-    { key: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
-    { key: 'bi', label: t('nav.bi'), icon: BarChart3 },
-    { key: 'ai', label: t('nav.ai'), icon: Brain, badge: 'AI' },
-    { key: 'inventory', label: t('nav.inventory'), icon: Package },
-    { key: 'scanner', label: t('nav.scanner'), icon: ScanBarcode },
-    { key: 'network', label: t('nav.network'), icon: Wifi },
-    { key: 'customer', label: t('nav.customer'), icon: Heart },
-    { key: 'notifications', label: t('nav.notifications'), icon: Bell },
-    { key: 'email', label: t('nav.email'), icon: Mail },
-    { key: 'data', label: t('nav.data'), icon: Database },
+  const navItems: { key: SectionKey; label: string; icon: React.ElementType; badge?: string; color?: string }[] = [
+    { key: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard, color: '#2563EB' },
+    { key: 'bi', label: t('nav.bi'), icon: BarChart3, color: '#7C3AED' },
+    { key: 'ai', label: t('nav.ai'), icon: Brain, badge: 'AI', color: '#0891B2' },
+    { key: 'inventory', label: t('nav.inventory'), icon: Package, color: '#059669' },
+    { key: 'scanner', label: t('nav.scanner'), icon: ScanBarcode, color: '#D97706' },
+    { key: 'network', label: t('nav.network'), icon: Wifi, color: '#DC2626' },
+    { key: 'customer', label: t('nav.customer'), icon: Heart, color: '#DB2777' },
+    { key: 'notifications', label: t('nav.notifications'), icon: Bell, color: '#EA580C' },
+    { key: 'email', label: t('nav.email'), icon: Mail, color: '#2563EB' },
+    { key: 'data', label: t('nav.data'), icon: Database, color: '#64748B' },
   ]
 
-  // Fetch real stats from database
   const fetchStats = useCallback(async () => {
     try {
       const [custRes, notRes, metRes] = await Promise.all([
@@ -83,7 +82,7 @@ function AppContent() {
     } catch { /* ignore */ }
   }, [])
 
-  useEffect(() => { void fetchStats() }, [fetchStats]) // eslint-disable-line react-hooks/set-state-in-effect
+  useEffect(() => { void fetchStats() }, [fetchStats])
 
   const renderSection = () => {
     switch (activeSection) {
@@ -100,23 +99,18 @@ function AppContent() {
     }
   }
 
-  const getSectionTitle = () => {
-    return navItems.find(item => item.key === activeSection)?.label || ''
-  }
-
-  // Compute notification badge for nav
+  const activeItem = navItems.find(i => i.key === activeSection)
   const notificationBadge = unreadNotifications > 0 ? unreadNotifications.toString() : undefined
 
   return (
-    <div className="min-h-screen bg-background flex" dir={dir}>
+    <div className="min-h-screen flex" style={{ background: '#F1F5F9' }} dir={dir}>
+
       {/* Mobile Overlay */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -124,216 +118,206 @@ function AppContent() {
 
       {/* Sidebar */}
       <aside className={`
-        fixed lg:sticky top-0 z-50 lg:z-auto
-        h-screen w-64 bg-[#0F172A] ${isRTL ? 'border-l border-border/50' : 'border-r border-border/50'}
+        fixed lg:sticky top-0 z-50 lg:z-auto h-screen w-64
         flex flex-col transition-transform duration-300
-        ${isRTL ? 'right-0' : 'left-0'}
+        ${isRTL ? 'right-0 border-l' : 'left-0 border-r'}
         ${sidebarOpen ? 'translate-x-0' : `${isRTL ? 'translate-x-full' : '-translate-x-full'} lg:translate-x-0`}
-      `}>
+      `} style={{ background: '#FFFFFF', borderColor: '#E2E8F0' }}>
+
         {/* Logo */}
-        <div className="p-4 border-b border-border/30">
+        <div className="p-5 border-b" style={{ borderColor: '#E2E8F0' }}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden" style={{ background: '#EFF6FF' }}>
               <img
-                src="/wt-logo.png"
-                alt="WORLD TELECOM"
+                src="/wt-logo.png" alt="WT"
                 className="w-8 h-8 object-contain"
                 onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                  target.parentElement!.innerHTML = '<span class="text-teal-400 font-bold text-sm">WT</span>'
+                  const t = e.target as HTMLImageElement
+                  t.style.display = 'none'
+                  t.parentElement!.innerHTML = '<span style="color:#2563EB;font-weight:700;font-size:14px">WT</span>'
                 }}
               />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-foreground">{t('sidebar.companyName')}</h1>
-              <p className="text-[10px] text-teal-400">{t('sidebar.companySub')}</p>
+              <h1 className="text-sm font-bold" style={{ color: '#0F172A' }}>{t('sidebar.companyName')}</h1>
+              <p className="text-[10px]" style={{ color: '#2563EB' }}>{t('sidebar.companySub')}</p>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`${isRTL ? 'mr-auto' : 'ml-auto'} lg:hidden p-1 h-auto`}
-              onClick={() => setSidebarOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <button className="lg:hidden p-1 rounded ml-auto" onClick={() => setSidebarOpen(false)}>
+              <X className="h-4 w-4" style={{ color: '#64748B' }} />
+            </button>
           </div>
         </div>
 
-        {/* Navigation */}
-        <ScrollArea className="flex-1 py-3">
-          <nav className="space-y-1 px-3">
+        {/* Nav */}
+        <ScrollArea className="flex-1 py-4">
+          <div className="px-3 space-y-1">
             {navItems.map((item) => {
               const badge = item.key === 'notifications' ? notificationBadge : item.badge
+              const isActive = activeSection === item.key
               return (
                 <button
                   key={item.key}
-                  onClick={() => {
-                    setActiveSection(item.key)
-                    setSidebarOpen(false)
+                  onClick={() => { setActiveSection(item.key); setSidebarOpen(false) }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200"
+                  style={{
+                    background: isActive ? `${item.color}15` : 'transparent',
+                    color: isActive ? item.color : '#64748B',
+                    fontWeight: isActive ? 600 : 400,
                   }}
-                  className={`
-                    w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm
-                    transition-all duration-200 group
-                    ${activeSection === item.key
-                      ? 'bg-teal-400/10 text-teal-400 border border-teal-400/20'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent'
-                    }
-                    ${item.key === 'scanner' ? 'border-amber-400/20 bg-amber-400/5' : ''}
-                    ${activeSection === 'scanner' && item.key === 'scanner' ? 'bg-amber-400/10 text-amber-400 border-amber-400/30' : ''}
-                  `}
+                  onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = '#F8FAFC' }}
+                  onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent' }}
                 >
-                  <item.icon className={`h-4.5 w-4.5 shrink-0 ${
-                    activeSection === item.key ? (item.key === 'scanner' ? 'text-amber-400' : 'text-teal-400') : (item.key === 'scanner' ? 'text-amber-400 group-hover:text-amber-300' : 'text-muted-foreground group-hover:text-foreground')
-                  }`} />
-                  <span className={`flex-1 ${isRTL ? 'text-right' : 'text-left'} ${item.key === 'scanner' ? 'font-medium' : ''}`}>{item.label}</span>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ background: isActive ? `${item.color}20` : '#F1F5F9' }}>
+                    <item.icon className="h-4 w-4" style={{ color: isActive ? item.color : '#94A3B8' }} />
+                  </div>
+                  <span className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>{item.label}</span>
                   {badge && (
-                    <Badge variant="secondary" className={`text-[10px] h-5 px-1.5 ${
-                      badge === 'AI' ? 'bg-teal-400/10 text-teal-400' :
-                      item.key === 'scanner' ? 'bg-amber-400/10 text-amber-400' :
-                      parseInt(badge) > 0 ? 'bg-red-400/10 text-red-400' :
-                      'bg-muted text-muted-foreground'
-                    }`}>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                      style={{
+                        background: badge === 'AI' ? '#0891B215' : parseInt(badge) > 0 ? '#FEE2E2' : '#F1F5F9',
+                        color: badge === 'AI' ? '#0891B2' : parseInt(badge) > 0 ? '#DC2626' : '#64748B',
+                      }}>
                       {badge}
-                    </Badge>
+                    </span>
                   )}
+                  {isActive && <ChevronRight className="h-3 w-3 shrink-0" style={{ color: item.color }} />}
                 </button>
               )
             })}
-          </nav>
+          </div>
         </ScrollArea>
 
-        {/* User Profile */}
-        <div className="p-3 border-t border-border/30">
-          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/30 transition-colors">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-teal-400/10 text-teal-400 text-xs">MA</AvatarFallback>
-            </Avatar>
+        {/* User */}
+        <div className="p-3 border-t" style={{ borderColor: '#E2E8F0' }}>
+          <div className="flex items-center gap-3 p-2 rounded-xl" style={{ background: '#F8FAFC' }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+              style={{ background: '#2563EB', color: '#FFFFFF' }}>MA</div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium truncate">{t('sidebar.user1Name')}</p>
-              <p className="text-[10px] text-muted-foreground">{t('sidebar.user1Role')}</p>
+              <p className="text-xs font-semibold truncate" style={{ color: '#0F172A' }}>{t('sidebar.user1Name')}</p>
+              <p className="text-[10px]" style={{ color: '#94A3B8' }}>{t('sidebar.user1Role')}</p>
             </div>
-            <div className="flex gap-1">
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                <Settings className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                <LogOut className="h-3.5 w-3.5" />
-              </Button>
-            </div>
+            <button className="p-1.5 rounded-lg transition-colors hover:bg-slate-200">
+              <Settings className="h-3.5 w-3.5" style={{ color: '#94A3B8' }} />
+            </button>
+            <button className="p-1.5 rounded-lg transition-colors hover:bg-slate-200">
+              <LogOut className="h-3.5 w-3.5" style={{ color: '#94A3B8' }} />
+            </button>
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main */}
       <div className="flex-1 flex flex-col min-h-screen min-w-0">
-        {/* Top Bar */}
-        <header className="sticky top-0 z-30 bg-[#0F172A]/95 backdrop-blur-sm border-b border-border/30">
-          <div className={`flex items-center gap-3 px-4 py-3 ${isRTL ? 'flex-row' : 'flex-row'}`}>
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden p-1 h-auto"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
 
-            {/* Section Title */}
+        {/* Topbar */}
+        <header className="sticky top-0 z-30 border-b" style={{ background: '#FFFFFF', borderColor: '#E2E8F0' }}>
+          <div className={`flex items-center gap-3 px-5 py-3`}>
+            <button className="lg:hidden p-1.5 rounded-lg" style={{ background: '#F1F5F9' }}
+              onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-5 w-5" style={{ color: '#64748B' }} />
+            </button>
+
+            {/* Breadcrumb */}
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold hidden sm:block">{getSectionTitle()}</h2>
-              <Badge variant="secondary" className="bg-teal-400/10 text-teal-400 text-[10px] hidden sm:inline-flex">
-                2026
-              </Badge>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                style={{ background: `${activeItem?.color}15` }}>
+                {activeItem && <activeItem.icon className="h-4 w-4" style={{ color: activeItem.color }} />}
+              </div>
+              <h2 className="text-base font-semibold hidden sm:block" style={{ color: '#0F172A' }}>
+                {activeItem?.label}
+              </h2>
             </div>
 
             {/* Search */}
-            <div className={`flex-1 max-w-md ${isRTL ? 'mr-auto' : 'ml-auto'}`}>
+            <div className={`flex-1 max-w-sm ${isRTL ? 'mr-auto' : 'ml-auto'}`}>
               <div className="relative">
-                <Search className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`} />
-                <Input
+                <Search className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 ${isRTL ? 'right-3' : 'left-3'}`}
+                  style={{ color: '#94A3B8' }} />
+                <input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('search')}
-                  className={`bg-muted/30 border-border/50 h-9 text-sm ${isRTL ? 'pr-9' : 'pl-9'}`}
+                  className={`w-full h-9 text-sm rounded-xl border outline-none transition-all ${isRTL ? 'pr-9 pl-4' : 'pl-9 pr-4'}`}
+                  style={{ background: '#F8FAFC', borderColor: '#E2E8F0', color: '#0F172A' }}
+                  onFocus={e => (e.target.style.borderColor = '#2563EB')}
+                  onBlur={e => (e.target.style.borderColor = '#E2E8F0')}
                 />
               </div>
             </div>
 
-            {/* Language Switcher */}
+            {/* Stats */}
+            <div className="hidden md:flex items-center gap-3">
+              {networkUptime > 0 && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs"
+                  style={{ background: '#F0FDF4', color: '#059669' }}>
+                  <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#059669' }} />
+                  {networkUptime}%
+                </div>
+              )}
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs"
+                style={{ background: '#EFF6FF', color: '#2563EB' }}>
+                <User className="h-3.5 w-3.5" />
+                {customerCount.toLocaleString()}
+              </div>
+            </div>
+
+            {/* Language */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1.5 h-9 px-2">
-                  <Globe className="h-4 w-4 text-teal-400" />
-                  <span className="text-xs font-medium hidden sm:inline">{languageNames[language]}</span>
-                </Button>
+                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-colors"
+                  style={{ borderColor: '#E2E8F0', color: '#64748B', background: '#F8FAFC' }}>
+                  <Globe className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{languageNames[language]}</span>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                 {(['ar', 'fr', 'en'] as Language[]).map((lang) => (
-                  <DropdownMenuItem
-                    key={lang}
-                    onClick={() => setLanguage(lang)}
-                    className={`cursor-pointer ${language === lang ? 'bg-teal-400/10 text-teal-400' : ''}`}
-                  >
-                    <span className="font-medium">{languageNames[lang]}</span>
-                    {language === lang && <Badge className="ml-2 bg-teal-400/20 text-teal-400 text-[9px]">&#10003;</Badge>}
+                  <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)}
+                    className={`cursor-pointer ${language === lang ? 'font-semibold' : ''}`}>
+                    {languageNames[lang]}
+                    {language === lang && <span className="ml-auto text-blue-600">✓</span>}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Quick Stats - Dynamic from DB */}
-            <div className="hidden md:flex items-center gap-3">
-              {networkUptime > 0 && (
-                <>
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-muted-foreground">{t('topbar.network')}: {networkUptime}%</span>
-                  </div>
-                  <div className="h-4 w-px bg-border/50" />
-                </>
-              )}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-muted-foreground">{t('topbar.customers')}:</span>
-                <span className="font-bold text-teal-400">{customerCount.toLocaleString()}</span>
-              </div>
-            </div>
-
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative p-2 h-auto" onClick={() => setActiveSection('notifications')}>
-              <Bell className="h-4.5 w-4.5" />
+            <button className="relative p-2 rounded-xl border transition-colors"
+              style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}
+              onClick={() => setActiveSection('notifications')}>
+              <Bell className="h-4 w-4" style={{ color: '#64748B' }} />
               {unreadNotifications > 0 && (
-                <span className="absolute -top-0.5 -left-0.5 w-4 h-4 bg-red-500 rounded-full text-[9px] flex items-center justify-center text-white font-bold">
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-bold"
+                  style={{ background: '#DC2626', color: '#FFFFFF' }}>
                   {unreadNotifications}
                 </span>
               )}
-            </Button>
+            </button>
 
-            {/* User */}
+            {/* User Avatar */}
             <div className="hidden sm:flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-teal-400/10 text-teal-400 text-xs">
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                style={{ background: '#2563EB', color: '#FFFFFF' }}>
+                <User className="h-4 w-4" />
+              </div>
               <div className="hidden lg:block">
-                <p className="text-xs font-medium">{t('sidebar.user2Name')}</p>
-                <p className="text-[10px] text-muted-foreground">{t('sidebar.user2Role')}</p>
+                <p className="text-xs font-semibold" style={{ color: '#0F172A' }}>{t('sidebar.user2Name')}</p>
+                <p className="text-[10px]" style={{ color: '#94A3B8' }}>{t('sidebar.user2Role')}</p>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page Content */}
+        {/* Content */}
         <main className="flex-1 p-4 lg:p-6">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15 }}
             >
               {renderSection()}
             </motion.div>
@@ -341,11 +325,11 @@ function AppContent() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-border/30 px-4 py-3">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+        <footer className="border-t px-5 py-3" style={{ borderColor: '#E2E8F0', background: '#FFFFFF' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs" style={{ color: '#94A3B8' }}>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-teal-400">WORLD TELECOM</span>
-              <span>&copy; 2026 - TelecomIntelligence</span>
+              <span className="font-bold" style={{ color: '#2563EB' }}>WORLD TELECOM</span>
+              <span>© 2026 - TelecomIntelligence</span>
             </div>
             <div className="flex items-center gap-4">
               <span>{t('footer.location')}</span>
