@@ -191,11 +191,12 @@ export default function DataManagementSection() {
     }
   }, [])
 
-  const fetchAllData = useCallback(async () => {
+const fetchAllData = useCallback(async () => {
     setLoading(true)
-    await Promise.all(tabs.map(tab => fetchData(tab.key)))
+    const keys: DataType[] = ['revenues', 'customers', 'inventory', 'incidents', 'metrics', 'tickets', 'notifications']
+    await Promise.all(keys.map(key => fetchData(key)))
     setLoading(false)
-  }, [fetchData, tabs])
+  }, [fetchData])
 
   useEffect(() => {
     fetchAllData()
