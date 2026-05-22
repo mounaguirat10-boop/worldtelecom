@@ -59,7 +59,10 @@ export default function AIIntelligenceSection() {
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
-  const [autoReplyEnabled, setAutoReplyEnabled] = useState([false, false, false, false, false])
+  const [autoReplyEnabled, setAutoReplyEnabled] = useState(() => {
+    if (typeof window === "undefined") return [false, false, false, false, false]
+    try { const s = localStorage.getItem("autoReplyEnabled"); return s ? JSON.parse(s) : [false, false, false, false, false] } catch { return [false, false, false, false, false] }
+  })
   const [dataCounts, setDataCounts] = useState<DataCounts>({
     revenues: 0, customers: 0, inventory: 0, incidents: 0, tickets: 0, notifications: 0
   })
@@ -166,9 +169,10 @@ export default function AIIntelligenceSection() {
 
   const toggleAutoReply = (id: number) => {
     setAutoReplyEnabled(prev => {
-      const next = [...prev]
-      next[id - 1] = !next[id - 1]
-      return next
+    const next = [...prev]
+next[id - 1] = !next[id - 1]
+localStorage.setItem("autoReplyEnabled", JSON.stringify(next))
+return next
     })
   }
 
@@ -478,3 +482,4 @@ export default function AIIntelligenceSection() {
     </motion.div>
   )
 }
+
