@@ -160,7 +160,7 @@ export default function DashboardSection() {
   const activeCustomers = customers.filter(c => c.status === 'نشط').length
   const lowStockCount = inventory.filter(i => i.quantity <= i.minQuantity).length
   const openIncidents = incidents.filter(i => i.status !== 'محلول').length
-  const openTickets = tickets.filter(t => t.status === 'مفتوح').length
+  const openTickets = tickets.filter(ticket => ticket.status === 'مفتوح').length
 
   const kpiData = [
     { title: t('dashboard.totalCustomers'), value: customers.length > 0 ? customers.length.toString() : '0', change: customers.length > 0 ? `${activeCustomers} ${t('dashboard.active')}` : t('noData'), trend: 'up' as const, icon: Users, color: 'text-teal-400', bgColor: 'bg-teal-400/10', borderColor: 'border-teal-400/20' },
@@ -364,10 +364,10 @@ export default function DashboardSection() {
                         <div><p className="text-xs">{t('dashboard.networkFault')}: {inc.title} - {inc.area}</p><p className="text-[10px] text-muted-foreground">{translateSeverity(inc.severity)}</p></div>
                       </div>
                     ))}
-                    {tickets.slice(0, 3).map(t => (
-                      <div key={t.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                    {tickets.slice(0, 3).map(ticket => (
+                      <div key={ticket.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                         <div className="mt-1 p-1.5 rounded-lg bg-teal-400/10 text-teal-400"><Phone className="h-3 w-3" /></div>
-                        <div><p className="text-xs">{t('dashboard.ticket')}: {t.subject} - {t.customerName}</p><p className="text-[10px] text-muted-foreground">{translateStatus(t.status)}</p></div>
+                        <div><p className="text-xs">{t('dashboard.ticket')}: {ticket.subject} - {ticket.customerName}</p><p className="text-[10px] text-muted-foreground">{translateStatus(ticket.status)}</p></div>
                       </div>
                     ))}
                     {customers.slice(0, 2).map(c => (
