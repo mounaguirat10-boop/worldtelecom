@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npx prisma generate && NEXT_PRIVATE_DISABLE_TURBOPACK=1 npx next build",
+  "installCommand": "npm install",
+  "framework": "nextjs"
+}
