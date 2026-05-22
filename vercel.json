@@ -1,6 +1,1 @@
 
-{
-  "buildCommand": "prisma generate && next build --no-turbopack",
-  "installCommand": "npm install",
-  "framework": "nextjs"
-}
