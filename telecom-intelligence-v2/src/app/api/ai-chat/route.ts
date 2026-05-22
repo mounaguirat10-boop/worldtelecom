@@ -29,12 +29,16 @@ export async function POST(request: NextRequest) {
     })
 
     const data = await response.json()
+
+    if (!response.ok) {
+      console.error('Anthropic error:', JSON.stringify(data))
+      return NextResponse.json({ response: 'عذراً، حدث خطأ في الاتصال بالذكاء الاصطناعي.' })
+    }
+
     const aiResponse = data.content?.[0]?.text || 'عذراً، حدث خطأ.'
     return NextResponse.json({ response: aiResponse })
   } catch (error) {
     console.error('AI error:', error)
-    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
+    return NextResponse.json({ response: 'عذراً، حدث خطأ.' })
   }
 }
-
-
