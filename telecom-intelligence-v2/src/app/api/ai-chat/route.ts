@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 
 const SYSTEM_PROMPT = `أنت مساعد ذكي لشركة WORLD TELECOM في تونس. متخصص في:
 - تحليل بيانات الأعمال والإيرادات
@@ -13,29 +13,25 @@ export async function POST(request: NextRequest) {
     const { message } = await request.json()
     if (!message) return NextResponse.json({ error: 'الرسالة مطلوبة' }, { status: 400 })
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: message }]
-      })
-    })
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=` + process.env.GEMINI_API_KEY,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ parts: [{ text: message }] }]
+        })
+      }
+    )
 
     const data = await response.json()
-
     if (!response.ok) {
-      console.error('Anthropic error:', JSON.stringify(data))
-      return NextResponse.json({ response: 'عذراً، حدث خطأ في الاتصال بالذكاء الاصطناعي.' })
+      console.error('Gemini error:', JSON.stringify(data))
+      return NextResponse.json({ response: 'عذراً، حدث خطأ.' })
     }
 
-    const aiResponse = data.content?.[0]?.text || 'عذراً، حدث خطأ.'
+    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'عذراً، حدث خطأ.'
     return NextResponse.json({ response: aiResponse })
   } catch (error) {
     console.error('AI error:', error)
