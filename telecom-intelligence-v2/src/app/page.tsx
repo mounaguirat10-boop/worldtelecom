@@ -352,4 +352,5 @@ export default function Home() {
       <AppContent />
     </LanguageProvider>
   )
-}
+} 
+ 
