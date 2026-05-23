@@ -217,9 +217,7 @@ function AppContent() {
               <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
                 <Settings className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                <LogOut className="h-3.5 w-3.5" />
-              </Button>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-400 hover:text-red-300" onClick={() => signOut({ callbackUrl: '/login' })}><LogOut className="h-3.5 w-3.5" /></Button>
             </div>
           </div>
         </div>
@@ -366,3 +364,4 @@ export default function Home() {
     </LanguageProvider>
   )
 }
+
