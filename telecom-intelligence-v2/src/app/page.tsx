@@ -29,6 +29,7 @@ import NotificationsSection from '@/components/telecom/NotificationsSection'
 import DataManagementSection from '@/components/telecom/DataManagementSection'
 import ScannerProduitSection from '@/components/telecom/ScannerProduitSection'
 import EmailSection from '@/components/telecom/EmailSection'
+import { signOut } from 'next-auth/react'
 
 import { LanguageProvider, useLanguage } from '@/lib/i18n/context'
 import { languageNames, Language } from '@/lib/i18n/translations'
@@ -217,7 +218,9 @@ function AppContent() {
               <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
                 <Settings className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-400 hover:text-red-300" onClick={() => signOut({ callbackUrl: '/login' })}><LogOut className="h-3.5 w-3.5" /></Button>
+             <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-400 hover:text-red-300" onClick={() => signOut({ callbackUrl: '/login' })}>
+  <LogOut className="h-3.5 w-3.5" />
+</Button>
             </div>
           </div>
         </div>
@@ -364,4 +367,3 @@ export default function Home() {
     </LanguageProvider>
   )
 }
-
