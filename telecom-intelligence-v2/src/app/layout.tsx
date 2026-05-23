@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "منصة TelecomIntelligence الرقمية لإدارة أعمال WORLD TELECOM - تونس",
   keywords: ["WORLD TELECOM", "TelecomIntelligence", "اتصالات", "تونس", "ذكاء اصطناعي"],
   authors: [{ name: "WORLD TELECOM - Mehrez ALOUI" }],
-  icons: { icon: "/logo.svg" },
+  icons: { icon: "/wt-logo.png" },
 };
 
 export default function RootLayout({
