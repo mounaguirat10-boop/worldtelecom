@@ -1,4 +1,4 @@
-@"
+
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -67,4 +67,3 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Failed to update email' }, { status: 500 })
   }
 }
-"@ | Out-File -FilePath src\app\api\emails\route.ts -Encoding utf8
