@@ -21,10 +21,14 @@ const LanguageContext = createContext<LanguageContextType>({
 })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('ar')
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window === "undefined") return "ar"
+    return (localStorage.getItem("language") as Language) || "ar"
+  })
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang)
+    localStorage.setItem("language", lang)
     // Update document direction
     document.documentElement.dir = languageDirection[lang]
     document.documentElement.lang = lang
@@ -65,3 +69,5 @@ export function useLanguage() {
 }
 
 export { LanguageContext }
+
+
