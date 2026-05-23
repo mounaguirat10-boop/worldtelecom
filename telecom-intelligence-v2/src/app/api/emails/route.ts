@@ -1,3 +1,4 @@
+@"
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -16,6 +17,18 @@ export async function POST(request: Request) {
     const { from, to, subject, body: emailBody, status, priority } = body
     if (!from || !to || !subject) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+    try {
+      const { Resend } = await import('resend')
+      const resend = new Resend(process.env.RESEND_API_KEY)
+      await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: to,
+        subject: subject,
+        text: emailBody || ''
+      })
+    } catch (e) {
+      console.error('Resend error:', e)
     }
     const email = await db.email.create({
       data: { from, to, subject, body: emailBody || '', status: status || 'مسودة', priority: priority || 'عادي' }
@@ -54,3 +67,4 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Failed to update email' }, { status: 500 })
   }
 }
+"@ | Out-File -FilePath src\app\api\emails\route.ts -Encoding utf8
