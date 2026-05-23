@@ -15,8 +15,11 @@ const handler = NextAuth({
           { id: '2', name: 'GUIRAT Mouna', username: process.env.USER_USERNAME, password: process.env.USER_PASSWORD, role: 'user' },
         ]
         const user = users.find(u => u.username === credentials?.username && u.password === credentials?.password)
-        if (user) return { id: user.id, name: user.name, role: user.role }
-        return null
+       console.log('Login attempt:', credentials?.username)
+console.log('Users:', users.map(u => u.username))
+if (user) return { id: user.id, name: user.name, role: user.role }
+console.log('Auth failed')
+return null
       }
     })
   ],
