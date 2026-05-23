@@ -70,6 +70,7 @@ const t = {
     notifications: { ar: 'الإشعارات', fr: 'Notifications', en: 'Notifications' },
     email: { ar: 'البريد الإلكتروني', fr: 'Email', en: 'Email' },
     data: { ar: 'إدارة البيانات', fr: 'Gestion des Données', en: 'Data Management' },
+      reports: { ar: 'التقارير', fr: 'Rapports', en: 'Reports' },
   },
 
   // ==================== TOP BAR ====================
@@ -553,3 +554,4 @@ export function getNestedValue(obj: Record<string, unknown>, path: string): stri
 }
 
 export default t
+

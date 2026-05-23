@@ -49,7 +49,7 @@ function AppContent() {
   const navItems: { key: SectionKey; label: string; icon: React.ElementType; badge?: string }[] = [
     { key: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { key: 'bi', label: t('nav.bi'), icon: BarChart3 },
-    { key: 'reports', label: 'التقارير', icon: FileBarChart },
+    { key: 'reports', label: t('nav.reports'), icon: FileBarChart },
     { key: 'ai', label: t('nav.ai'), icon: Brain, badge: 'AI' },
     { key: 'inventory', label: t('nav.inventory'), icon: Package },
     { key: 'scanner', label: t('nav.scanner'), icon: ScanBarcode },
@@ -354,3 +354,4 @@ export default function Home() {
   )
 }
 // force redeploy 05/23/2026 23:19:12
+
