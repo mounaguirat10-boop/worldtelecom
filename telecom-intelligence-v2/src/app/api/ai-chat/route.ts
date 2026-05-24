@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     if (!message) return NextResponse.json({ error: 'الرسالة مطلوبة' }, { status: 400 })
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=` + process.env.GEMINI_API_KEY,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=` + process.env.GEMINI_API_KEY,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,4 +38,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ response: 'عذراً، حدث خطأ.' })
   }
 }
+
 
